@@ -1,7 +1,11 @@
+let twelfth = 0;
+let month = 0;
 let img1;
 // let img2;
-// var angle = 225;
+var angle = -70;
 let particles = [];
+let particleSystems = [];
+
 let sunimg = [];
 let mercuryimg = [];
 let venusimg = [];
@@ -13,7 +17,6 @@ let neptuneimg = [];
 let plutoimg = [];
 let erisimg = [];
 
-//nay's code
 let table;
 let timer = 0;
 let counted = false;
@@ -22,10 +25,9 @@ let phase = 4;//nay says: phase = 2, & 2 is the second column on her table, not 
 // phase for me moon is column 5, so not counting first column, this would be column 4?
 let rows;
 let rowCount;
-let conjunct = false;//what should be my two (or more) booleans?, maybe waxing ~ conjunct
-let traveling = true;//what shousl be my two (or more) booleans? maybe waning ~ traveling
+let conjunct = false;
+let traveling = true;
 
-//do we need these instead of waning & waxing??
 let sun = false;
 let mercury = false;
 let venus = false;
@@ -42,32 +44,31 @@ function preload() {
   img1 = loadImage('assets/outerwheel4.png');
   // img2 = loadImage('assets/innerwheel2.png');
 
-//nay's code
-  table = loadTable('ephemerisfinal.csv', 'csv', 'header');
+  table = loadTable('assets/ephemerisp5.csv', 'csv', 'header');
   }
 
 function setup() {
- createCanvas (800,800);
+ createCanvas (800,800);//WEBGL for 3D, load model instead of image, see p5 ref - has to be obj!
+ //convert in blender or unity??
 
-//nay's code
  print(table.getRowCount() + ' total rows in table');
  print(table.getColumnCount() + ' total columns in table');
  rows = table.getRow();
  rowCount = table.getRowCount();
 
- sunimg[0] = loadImage('assets/sun.png')
- sunimg[1] = loadImage('assets/sun.png')
+ sunimg[0] = loadImage('assets/venus.png');
+ sunimg[1] = loadImage('assets/venus.png');
  mercuryimg[0] = loadImage('assets/mercury.png');
  mercuryimg[1] = loadImage('assets/mercury.png');
  venusimg[0] = loadImage('assets/venus.png');
  venusimg[1] = loadImage('assets/venus.png');
  marsimg[0] = loadImage('assets/mars.png');
- marsimg[1] = loadImage('assets/mars');
- jupiterimg[0 = loadImage('assets/jupiter.png');
- jupiterimg[1]] = loadImage('assets/jupiter.png');
+ marsimg[1] = loadImage('assets/mars.png');
+ jupiterimg[0] = loadImage('assets/jupiter.png');
+ jupiterimg[1] = loadImage('assets/jupiter.png');
  saturnimg[0] = loadImage('assets/saturn.png');
  saturnimg[1] = loadImage('assets/saturn.png');
- uranusimg[0] = loadImage('assets/uranus.png');
+ uranusimg[0] = loadImage('assets/uranus.png'); 
  uranusimg[1] = loadImage('assets/uranus.png');
  neptuneimg[0] = loadImage('assets/neptune.png');
  neptuneimg[1] = loadImage('assets/neptune.png');
@@ -76,20 +77,13 @@ function setup() {
  erisimg[0] = loadImage('assets/eris.png');
  erisimg[1] = loadImage('assets/eris.png');
 
-
- for (var i = 0; i < 100; i++) {
-		particles.push(new Particle);
+for (var i = 0; i < 10; i++) {
+	particleSystems[i]= new Particlesystem(i);
 	}
 }
 
 function draw() {
 	background(0);
-
-	// push();
- //  	imageMode(CENTER);
- //  	translate(width/2, height/2);
- //  	image(img1, 0, 0);
- //  	pop();
 
   	push();
   	imageMode(CENTER);
@@ -97,76 +91,172 @@ function draw() {
   	image(img1, 0, 0);
   	pop();
 
-	// // angle+=-0.0025
-	// angle+= -0.1;
-	// angle = angle%360;
+	angle-= 0.5;//osc message from max will add -0.5 to 'timer'
+	if (angle < -360){
+		angle = 0;
+		month++;
+	}
 
- //  	moon(angle);
- //  	// print(angle);
+  	moon(angle);
+  	// print(angle);
 
-  	if(path < -45 && angle > -46){//trigger sun, this is new moon
-  		print('respawn');
-  		for (var i = 0; i < particles.length; i++) {
-  			particles[i].respawn(0);//0 = sun in this case
+  	for (var i = 0; i < particleSystems.length; i++) {
+  	 particleSystems[i].runSystem();
+  	}
+
+  	if(angle < -70 && angle > -75){//scorpio 
+  		if (month == 0){
+  			twelfth = 0
+  		}else {
+  			twelfth = 12*month;
   		}
+  		triggerplanets(twelfth);
   	}
 
-  	for (var i = 0; i < particles.length; i++) {
-  		particles[i].display();
-  		particles[i].move();
+  	if(angle < -101 && angle > -106){//sag 
+  		if (month == 0){
+  			twelfth = 1
+  		}else {
+  			twelfth = 12*month+1;//next one will be month+2
+  		}
+  		triggerplanets(twelfth);
   	}
-  	//nay's code
-  	 print(path);
-  if (millis() % 1000 > 500){
-    if(!counted){
-      timer++;
-      path = table.get(timer, phase);
-      counted = true;
-      //nay: //if (table.get(timer, 6) == 1) 
-      //miri's attempt with sun:
-      if (table.get(timer, 5) == >= 1 and < 30){ //6 is the number of the column in the table (new moon), not counting the first column
-      	//would this be for me, for the sun for example, (table.get(timer, 5) == >=1 and <30){} ~ 
-      	//or?? maybe move planets to 0 or 1 instead of actual degrees?
-       conjunct = true;
-       traveling = false;
-      }
-      //nay: //if (table.get(timer, 6) == 1) 
-      //miri's attempt with mercury:
-      if (table.get(timer, 6) ==  >= 1 and < 30){ //5 is the number of the column in the table (full moon), not counting the first column
-        conjunct = true;
-        traveling = false;
-      }
-      if (conjunct == true) {
-      //nay: path = map(path, 0, 100, 630, 400);
-      //miri's attempt:
-
+  	
+  	if(angle < -130 && angle > -136){//cap
+  		if (month == 0){
+  			twelfth = 2
+  		}else {
+  			twelfth = 12*month+2;
+  		}
+  		triggerplanets(twelfth);
   	}
-      }
-      if (traveling == true) {
-      path = map(path, 0, 100, 160, 400);
-      }
-    }
-  }else{ //if millies() % 1000 < 500
-    if(counted == true){
-      counted = false;
-    }
-  }
-  if (timer >= rowCount){
-    timer = 0;
-  }
-//nay's code
-  // fill(200);
-  // ellipse(width/2, height/2, width/3, height/3);
-  // for (var i = 0; i < timer; i++) { //2.66 is the 800/r  
-  //   fill(0);
-  //   ellipse(path, 0.0025 * ((path-400)*(path-400)) + 400, width/3, height/3);
-  }
 
- 
+  	if(angle < -160 && angle > -166){//aquarius	
+  		if (month == 0){
+  			twelfth = 3
+  		}else {
+  			twelfth = 12*month+3;
+  		}
+  		triggerplanets(twelfth);
+  	}
+
+  	if(angle < -190 && angle > -195){//pisces
+  		if (month == 0){
+  			twelfth = 4
+  		}else {
+  			twelfth = 12*month+4;
+  		}
+  		triggerplanets(twelfth);
+  	}
+
+  	if(angle < -220 && angle > -225){//aries
+  		if (month == 0){
+  			twelfth = 5
+  		}else {
+  			twelfth = 12*month+5;
+  		}
+  		triggerplanets(twelfth);
+  	}
+
+  	if(angle < -250 && angle > -255){//taurus	
+  		if (month == 0){
+  			twelfth = 6
+  		}else {
+  			twelfth = 12*month+6;
+  		}
+  		triggerplanets(twelfth);
+  	}
+
+	if(angle < -280 && angle > -285){//gemini
+  			if (month == 0){
+  			twelfth = 7
+  		}else {
+  			twelfth = 12*month+7;
+  		}
+  		triggerplanets(twelfth);
+  	}
+
+  	if(angle < -310 && angle > -315){//cancer
+  			if (month == 0){
+  			twelfth = 8
+  		}else {
+  			twelfth = 12*month+8;
+  		}
+  		triggerplanets(twelfth);
+  	}
+
+  	if(angle < -340 && angle > -345){//leo
+  			if (month == 0){
+  			twelfth = 9
+  		}else {
+  			twelfth = 12*month+9;
+  		}
+  		triggerplanets(twelfth);
+  	}
+
+  	if(angle < -301 && angle > -330){//virgo
+  		if (month == 0){
+  			twelfth = 10
+  		}else {
+  			twelfth = 12*month+10;
+  		}
+  		triggerplanets(twelfth);
+  	}
+
+  		if(angle < -331 && angle > -360){//libra
+  			if (month == 0){
+  			twelfth = 11
+  		}else {
+  			twelfth = 12*month+11;
+  		}
+  		triggerplanets(twelfth);
+  	}
+
+  	for (var i = 0; i < particleSystems.length; i++) {
+  		particleSystems[i].runSystem();
+  		}
+}	
+
+ function triggerplanets(twelfth){
+  	//let row = table.getRow(twelfth-1);
+ 	let row = table.getRow(twelfth);//this needs to return the right row for a given twelfth
+ 	// print(row.get('mars')!= 0);
+ 	print(twelfth);
+ 	if(	row.get('sun') != 0){
+ 		particleSystems[0].respawn();
+ 	}
+ 	if(	row.get('mercury') != 0){
+  		particleSystems[1].respawn();
+  		}
+  	if(	row.get('venus') != 0){
+  		particleSystems[2].respawn();
+  		}	
+  	if(	row.get('mars') != 0){
+  		particleSystems[3].respawn();
+  		print('respawning mars');
+  		}
+  	if(	row.get('jupiter') != 0){
+  		particleSystems[4].respawn();
+  		}	
+  	if(	row.get('saturn') != 0){
+  		particleSystems[5].respawn();
+  		}
+  	if(	row.get('uranus') != 0){
+  		particleSystems[6].respawn();
+  		}	
+  	if(	row.get('neptune') != 0){
+  		particleSystems[7].respawn();
+  		}
+  	if(	row.get('pluto') != 0){
+  		particleSystems[8].respawn();
+  		}	
+  	if(	row.get('eris') != 0){
+  		particleSystems[9].respawn();
+  		}
+ }
 
   function moon(phase){
 	push();
-	// angle+=-0.0025
 	translate(width/2,height/2);
 	rotate(radians(phase));
 	stroke('red');
@@ -175,18 +265,18 @@ function draw() {
 	pop();
 }
 class Particle{
-	 constructor(){
+	 constructor(planet){
 		this.size = random(5, 50);
 		this.xSpeed = random(-2, 2);
 		this.ySpeed = random(-2, 2);
 		this.image = int(random(2));
 		this.x = width/2;
 		this.y = height/2;
-		this.planet = 0;
+		this.planet = planet;
 		this.visible = false;
 	}
-
-	display(){//we can display whatever we want ellipse, rect, images, etc
+	
+	display(){
 		if (this.visible){
 			if(this.planet == 0){
 				image(sunimg[this.image], this.x, this.y, this.size, this.size);
@@ -226,181 +316,36 @@ class Particle{
 		this.y = this.y + this.ySpeed;
 	}
 
-	respawn(planetNumber){//
+	respawn(){//
 		this.visible = true;
-		this.planet = planetNumber;
 		this.x = width/2;
 		this.y = height/2;
-
 	}
-
 }
 
-
-
-
-
-
-
-
-// timer++;
- //  	timer = timer % (monthInSeconds * frameRate); //300 should be 5 seconds if we are 60fps ~ can this be slower?`
- // 	 moonphase = map(timer, 0, monthInSeconds * frameRate, 0, 30);//can moonphase be the line??
- //  	//print(moonphase);
- //  	// fill(255);
- //  	// text("day of the month "+int(moonphase), 100, 100);
- //  	moon(moonphase, width/2, height/2, 1);//how to make this relate to my line??
-
- //  	for (var i = 0; i < 30; i++) {
- //    moon(i, i*30, 50, 0.1);
-  // }
- 
- 
-
-//can a class be inside a function, ie ~> can we call certain particles to explode or move in at different
-//parts of the moonphase function?????
-
-// function moon(phase, xLoc, yLoc, overallSize){ //phase should be between 0-30
-//   if (phase <= 15){ //can we make phase into an angle? i.e. if angle == -45 -> particles explode??
-//     phase = map(phase, 0, 15, 0, 300);
-//   }else{
-//     phase = map(phase, 15, 30, 300, 0);
-//   }
-
-//   ellipse(xLoc, yLoc, phase*overallSize, phase*overallSize );
-// 	//print("myCoolFunction is running");
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// class Particle{//what do we do with this data, we hold it here
-// 		this.size = random(5, 50);
-// 		this.xSpeed = random(-1, 1);
-// 		this.ySpeed = random(-1, 1);
-// 		this.image = int(random(2));
-// 	}
-
-// display(){//we can display whatever we want ellipse, rect, images, etc
-// 	image(earthrise, this.x, this.y, this.size, this.size);
-// 		let newSize;
-// 		if(this.image == 1){
-// 		newSize = this.size * 2;
-// 	}
-// 	else{
-// 		newSize = this.size;
-// 	}
-// 	image(earths[this.image], this.x, this.y, this.size, this.size);
-
-// }
-
-// move(){
-// 	this.x = this.x + this.xSpeed;
-// 	this.y = this.y + this.ySpeed;
-// 	if (this.x > width || this.x < 0){
-// 		this.x = random(width);
-// 	}
-// 	if (this.y > height || this.y < 0){
-// 		this.y = random(height);
-// 	}
-// }
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-//     phase = map(phase, 0, 15, 0, 300);
-//  }
-//   else{
-//     phase = map(phase, 15, 30, 300, 0);
-//   }
-
-//   // image(moon[phase], xLoc, yLoc)
-
-//   ellipse(xLoc, yLoc, phase*overallSize, phase*overallSize);
-// }
-	
-
-
-
-
-
-
-	
-
-
-  	//where are we block in p5?
-
-  // image(moon[phase], xLoc, yLoc)
-
-  // ellipse(xLoc, yLoc, phase*overallSize, phase*overallSize);
-
-  // text("day of the month" +int(moonphase), 100, 100);
-
-// let timer = 0;
-// let moonphase;
-// let monthInSeconds = 30;
-// let frameRate = 60;
-// let xLoc
-// let yLoc
-
-// function setup() {
-//  createCanvas (800,800)
-// }
-
-// //what should go in moonfunction vs drawloop?
-// //moonfuction should only contain what I need to draw the moon
-// //draw function is just drawing it
-
-// function draw() {
-// background(0)
-// timer++;
-// timer = timer % (monthInSeconds * frameRate);
-// // timer = timer % 300; //300 should be 5 seconds if we are at 60 framerate
-// // moonphase = map(timer, 0, 300, 0, 30);
-// moonphase = map(timer, 0, monthInSeconds * frameRate, 0, 30);
-// fill(255);
-// text("day of the month" +int(moonphase), 100, 100);
-// // print(moonphase);
-// moon(moonphase, width/2, height/2, 1);  
-
-// //draw 28 different moons
-// for (var i = 0; i < 30; i++){
-//   moon(i, i*30, 50, 0.1);
-//    // moon(i, i+100, 100); //circle with circles within
-//  } 
-// }
-
-// function moon(phase, xLoc, yLoc, overallSize){//phase should be between 0-30
-//   if (phase <= 15){
-//     phase = map(phase, 0, 15, 0, 300);
-//  }
-//   else{
-//     phase = map(phase, 15, 30, 300, 0);
-//   }
-
-//   // image(moon[phase], xLoc, yLoc)
-
-//   ellipse(xLoc, yLoc, phase*overallSize, phase*overallSize);
-// }
-
+class Particlesystem{
+	 constructor(planet){
+	 	this.particles = [];
+	 	this.planet = planet;
+ 		for (var i = 0; i < 100; i++) {
+			this.particles.push(new Particle(this.planet));
+		}
+	 }
+	 addParticle(p){
+	 	p.planet = this.planet;
+	 	this.particles.push(p);
+	 }
+	 runSystem(){
+	 	for (var i = 0; i < this.particles.length; i++) {
+	 		this.particles[i].display();
+  			this.particles[i].move();
+	 	}
+	 }
+	 respawn(){
+	 	for (var i = 0; i < this.particles.length; i++) {
+  			this.particles[i].respawn();
+  		}
+	 }
+}	 
 
 
