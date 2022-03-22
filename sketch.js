@@ -17,6 +17,10 @@ let saturnimg = [];
 // let plutoimg = [];
 // let erisimg = [];
 
+let wind;
+let gravity;
+
+
 let table;
 let timer = 0;
 let counted = false;
@@ -77,6 +81,9 @@ function setup() {
  // erisimg[0] = loadImage('assets/eris.png');
  // erisimg[1] = loadImage('assets/eris.png');
 
+ // wind = createVector(0.1, 0);
+ // gravity = createVector(0, 0.1);
+
 for (var i = 0; i < 10; i++) {
 	particleSystems[i]= new Particlesystem(i);
 	}
@@ -84,6 +91,10 @@ for (var i = 0; i < 10; i++) {
 
 function draw() {
 	background(0);
+
+   // gravity.y = map(mouseY, 0, width, 0, 0.1);
+   // wind.x = map(mouseX, 0, width, -0.1, 0.1);
+   //print(gravity.y);
 
   	push();
   	imageMode(CENTER);
@@ -211,7 +222,7 @@ function draw() {
   		}
   		triggerplanets(twelfth);
   	}
-
+    print('225');
   	for (var i = 0; i < particleSystems.length; i++) {
   		particleSystems[i].runSystem();
   		}
@@ -221,7 +232,7 @@ function draw() {
   	//let row = table.getRow(twelfth-1);
  	let row = table.getRow(twelfth);//this needs to return the right row for a given twelfth
  	// print(row.get('mars')!= 0);
- 	print(twelfth);
+ 	// print(twelfth);
  	if(	row.get('sun') != 0){
  		particleSystems[0].respawn();
  	}
@@ -233,7 +244,7 @@ function draw() {
   		}	
   	if(	row.get('mars') != 0){
   		particleSystems[3].respawn();
-  		print('respawning mars');
+  		// print('respawning mars');
   		}
   	if(	row.get('jupiter') != 0){
   		particleSystems[4].respawn();
@@ -266,36 +277,62 @@ function draw() {
 }
 class Particle{
 	 constructor(planet){
-		this.size = random(15, 75);
-		this.xSpeed = random(-2, 2);
-		this.ySpeed = random(-2, 2);
-		this.image = int(random(2));
-		this.x = width/2;
-		this.y = height/2;
+		// this.size = random(15, 75);
+		// this.xSpeed = random(-2, 2);
+		// this.ySpeed = random(-2, 2);
+		// this.image = int(random(2));
+		// this.x = width/2;
+		// this.y = height/2;
 		this.planet = planet;
 		this.visible = false;
+
+    this.location = createVector(random(width), random(height));
+      this.velocity = p5.Vector.random2D(); //instead of xSpeed and ySpeed
+      this.velocity.mult(random(-.5, .5));
+      this.size = 25;
+      this.image = int(random(2));
 	}
 	
 	display(){
 		if (this.visible){
-			if(this.planet == 0){
-				image(sunimg[this.image], this.x, this.y, this.size, this.size);
-			}
-			if(this.planet == 1){
-				image(mercuryimg[this.image], this.x, this.y, this.size, this.size);
-			}
-			if(this.planet == 2){
-				image(venusimg[this.image], this.x, this.y, this.size, this.size);
-			}
-			if(this.planet == 3){
-				image(marsimg[this.image], this.x, this.y, this.size, this.size);
-			}
-			if(this.planet == 4){
-				image(jupiterimg[this.image], this.x, this.y, this.size, this.size);
-			}
-			if(this.planet == 5){
-				image(saturnimg[this.image], this.x, this.y, this.size, this.size);
-			}
+			// if(this.planet == 0){
+			// 	image(sunimg[this.image], this.x, this.y, this.size, this.size);
+			// }
+			// if(this.planet == 1){
+			// 	image(mercuryimg[this.image], this.x, this.y, this.size, this.size);
+			// }
+			// if(this.planet == 2){
+			// 	image(venusimg[this.image], this.x, this.y, this.size, this.size);
+			// }
+			// if(this.planet == 3){
+			// 	image(marsimg[this.image], this.x, this.y, this.size, this.size);
+			// }
+			// if(this.planet == 4){
+			// 	image(jupiterimg[this.image], this.x, this.y, this.size, this.size);
+			// }
+			// if(this.planet == 5){
+			// 	image(saturnimg[this.image], this.x, this.y, this.size, this.size);
+			// }
+
+        if(this.planet == 0){
+        image(sunimg[this.image], this.location.x, this.location.y, this.size, this.size);
+      }
+      if(this.planet == 1){
+        image(mercuryimg[this.image], this.location.x, this.location.y, this.size, this.size);
+      }
+      if(this.planet == 2){
+        image(venusimg[this.image], this.location.x, this.location.y, this.size, this.size);
+      }
+      if(this.planet == 3){
+        image(marsimg[this.image], this.location.x, this.location.y, this.size, this.size);
+      }
+      if(this.planet == 4){
+        image(jupiterimg[this.image], this.location.x, this.location.y, this.size, this.size);
+      }
+      if(this.planet == 5){
+        image(saturnimg[this.image], this.location.x, this.location.y, this.size, this.size);
+      }
+
 			// if(this.planet == 6){
 			// 	image(uranusimg[this.image], this.x, this.y, this.size, this.size);
 			// }
@@ -312,14 +349,23 @@ class Particle{
 	}
 
 	move(){
-		this.x = this.x + this.xSpeed;
-		this.y = this.y + this.ySpeed;
+		// this.x = this.x + this.xSpeed;
+		// this.y = this.y + this.ySpeed;
+
+    this.velocity.add(gravity);
+    this.velocity.add(wind);
+    this.location.add(this.velocity);
+
+
+
 	}
 
 	respawn(){//
 		this.visible = true;
-		this.x = width/2;
-		this.y = height/2;
+		// this.x = width/2;
+		// this.y = height/2;
+    this.location.x = width/2;
+    this.location.y = height/2;
 	}
 }
 
@@ -337,8 +383,11 @@ class Particlesystem{
 	 }
 	 runSystem(){
 	 	for (var i = 0; i < this.particles.length; i++) {
-	 		this.particles[i].display();
-  			this.particles[i].move();
+	 		// this.particles[i].display();
+  		// 	this.particles[i].move();
+
+      this.particles[i].move();
+      this.particles[i].display();
 	 	}
 	 }
 	 respawn(){
