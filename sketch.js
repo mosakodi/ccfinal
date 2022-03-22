@@ -12,10 +12,10 @@ let venusimg = [];
 let marsimg = [];
 let jupiterimg = [];
 let saturnimg = [];
-let uranusimg = [];
-let neptuneimg = [];
-let plutoimg = [];
-let erisimg = [];
+// let uranusimg = [];
+// let neptuneimg = [];
+// let plutoimg = [];
+// let erisimg = [];
 
 let table;
 let timer = 0;
@@ -68,14 +68,14 @@ function setup() {
  jupiterimg[1] = loadImage('assets/jupiter.png');
  saturnimg[0] = loadImage('assets/saturn.png');
  saturnimg[1] = loadImage('assets/saturn.png');
- uranusimg[0] = loadImage('assets/uranus.png'); 
- uranusimg[1] = loadImage('assets/uranus.png');
- neptuneimg[0] = loadImage('assets/neptune.png');
- neptuneimg[1] = loadImage('assets/neptune.png');
- plutoimg[0] = loadImage('assets/pluto.png');
- plutoimg[1] = loadImage('assets/pluto.png');
- erisimg[0] = loadImage('assets/eris.png');
- erisimg[1] = loadImage('assets/eris.png');
+ // uranusimg[0] = loadImage('assets/uranus.png'); 
+ // uranusimg[1] = loadImage('assets/uranus.png');
+ // neptuneimg[0] = loadImage('assets/neptune.png');
+ // neptuneimg[1] = loadImage('assets/neptune.png');
+ // plutoimg[0] = loadImage('assets/pluto.png');
+ // plutoimg[1] = loadImage('assets/pluto.png');
+ // erisimg[0] = loadImage('assets/eris.png');
+ // erisimg[1] = loadImage('assets/eris.png');
 
 for (var i = 0; i < 10; i++) {
 	particleSystems[i]= new Particlesystem(i);
@@ -241,18 +241,18 @@ function draw() {
   	if(	row.get('saturn') != 0){
   		particleSystems[5].respawn();
   		}
-  	if(	row.get('uranus') != 0){
-  		particleSystems[6].respawn();
-  		}	
-  	if(	row.get('neptune') != 0){
-  		particleSystems[7].respawn();
-  		}
-  	if(	row.get('pluto') != 0){
-  		particleSystems[8].respawn();
-  		}	
-  	if(	row.get('eris') != 0){
-  		particleSystems[9].respawn();
-  		}
+  	// if(	row.get('uranus') != 0){
+  	// 	particleSystems[6].respawn();
+  	// 	}	
+  	// if(	row.get('neptune') != 0){
+  	// 	particleSystems[7].respawn();
+  	// 	}
+  	// if(	row.get('pluto') != 0){
+  	// 	particleSystems[8].respawn();
+  	// 	}	
+  	// if(	row.get('eris') != 0){
+  	// 	particleSystems[9].respawn();
+  	// 	}
  }
 
   function moon(phase){
@@ -266,7 +266,7 @@ function draw() {
 }
 class Particle{
 	 constructor(planet){
-		this.size = random(5, 50);
+		this.size = random(15, 75);
 		this.xSpeed = random(-2, 2);
 		this.ySpeed = random(-2, 2);
 		this.image = int(random(2));
@@ -296,18 +296,18 @@ class Particle{
 			if(this.planet == 5){
 				image(saturnimg[this.image], this.x, this.y, this.size, this.size);
 			}
-			if(this.planet == 6){
-				image(uranusimg[this.image], this.x, this.y, this.size, this.size);
-			}
-			if(this.planet == 7){
-				image(neptuneimg[this.image], this.x, this.y, this.size, this.size);
-			}
-			if(this.planet == 8){
-				image(plutoimg[this.image], this.x, this.y, this.size, this.size);
-			}
-			if(this.planet == 9){
-				image(erisimg[this.image], this.x, this.y, this.size, this.size);
-			}
+			// if(this.planet == 6){
+			// 	image(uranusimg[this.image], this.x, this.y, this.size, this.size);
+			// }
+			// if(this.planet == 7){
+			// 	image(neptuneimg[this.image], this.x, this.y, this.size, this.size);
+			// }
+			// if(this.planet == 8){
+			// 	image(plutoimg[this.image], this.x, this.y, this.size, this.size);
+			// }
+			// if(this.planet == 9){
+			// 	image(erisimg[this.image], this.x, this.y, this.size, this.size);
+			// }
 		}
 	}
 
